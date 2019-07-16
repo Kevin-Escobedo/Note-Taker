@@ -16,12 +16,12 @@ class NoteTaker:
         '''Sets up the GUI'''
         self.root_window = tkinter.Tk()
         self.root_window.geometry("500x510")
-        self.root_window.title("Note Taker")
+        self.root_window.title("Escobedo Industries Note Taker")
         self.root_window.resizable(0, 0)
         self.root_window.iconbitmap(self.resource_path("quill.ico"))
-        self.email_user = "" #Add own email
-        self.email_password = "" #Add own password
-        self.email_recipient = "" #Add recipient
+        self.email_user = "" #Add own email here
+        self.email_password = "" #Add own password here
+        self.email_recipient = tkinter.Entry(self.root_window, width = 67)
         self.note_title = tkinter.Entry(self.root_window, width = 67)
         self.notes = tkinter.Text(self.root_window, width = 50, height = 27)
 
@@ -56,6 +56,16 @@ class NoteTaker:
     def get_notes(self):
         '''Gets the notes taken'''
         return self.notes.get(1.0, tkinter.END)
+
+    def get_email_recipient(self):
+        try:
+            recipient = self.email_recipient.get()
+            if self.check_not_empty(recipient):
+                return recipient
+            else:
+                raise ValueError
+        except ValueError:
+            messagebox.showinfo("Error", message = "Invalid Recipient")
     
     def save_to_file(self):
         '''Saves notes to a file'''
@@ -78,10 +88,11 @@ class NoteTaker:
             else:
                 subject = "{} Notes".format(title)
 
-            #This code found online
+            recipient = self.get_email_recipient()
+
             msg = MIMEMultipart()
             msg['From'] = self.email_user
-            msg['To'] = self.email_recipient
+            msg['To'] = recipient
             msg['Subject'] = subject
 
             body = self.get_notes()
@@ -93,15 +104,20 @@ class NoteTaker:
             server.login(self.email_user, self.email_password)
 
             
-            server.sendmail(self.email_user, self.email_recipient, text)
+            server.sendmail(self.email_user, recipient, text)
 
             server.quit()
-            #Maybe in a video tutorial? I forget
 
             messagebox.showinfo("Success", message = "Notes sent successfully!")
             
         except gaierror:
             showinfo("Error", message = "No Internet Connection")
+
+        except AttributeError:
+            pass
+
+        except TypeError:
+            pass
 
         
 
@@ -109,15 +125,18 @@ class NoteTaker:
         '''Runs the GUI'''
         tkinter.Label(self.root_window, text = "Name of Notes").grid(row = 0, column = 0)
         self.note_title.grid(row = 0, column = 1, sticky = tkinter.NSEW)
+        
+        tkinter.Label(self.root_window, text = "Email Recipient").grid(row = 1, column = 0)
+        self.email_recipient.grid(row = 1, column = 1, sticky = tkinter.NSEW)
 
-        tkinter.Label(self.root_window, text = "Notes").grid(row = 1, column = 0)
-        self.notes.grid(row = 1, column = 1, columnspan = 2, sticky = tkinter.NSEW)
+        tkinter.Label(self.root_window, text = "Notes").grid(row = 2, column = 0)
+        self.notes.grid(row = 2, column = 1, columnspan = 2, sticky = tkinter.NSEW)
 
         save_button = tkinter.Button(self.root_window, text = "Save", command = self.save_to_file)
-        save_button.grid(row = 2, column = 0, columnspan = 2)
+        save_button.grid(row = 3, column = 0, columnspan = 2)
 
         send_button = tkinter.Button(self.root_window, text = "Send", command = self.send_notes)
-        send_button.grid(row = 2, column = 1, columnspan = 2)
+        send_button.grid(row = 3, column = 1, columnspan = 2)
 
         self.root_window.mainloop()
         
