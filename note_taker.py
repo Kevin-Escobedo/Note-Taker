@@ -15,15 +15,15 @@ class NoteTaker:
     def __init__(self):
         '''Sets up the GUI'''
         self.root_window = tkinter.Tk()
-        self.root_window.geometry("500x550")
+        self.root_window.geometry("550x560")
         self.root_window.title("Escobedo Industries Note Taker")
         self.root_window.resizable(0, 0)
         self.root_window.iconbitmap(self.resource_path("quill.ico"))
         self.email_user = "" #Add own email here
         self.email_password = "" #Add own password here
-        self.email_recipient = tkinter.Entry(self.root_window, width = 67)
-        self.note_title = tkinter.Entry(self.root_window, width = 67)
-        self.notes = tkinter.Text(self.root_window, width = 50, height = 27)
+        self.email_recipient = tkinter.Entry(self.root_window, width = 75)
+        self.note_title = tkinter.Entry(self.root_window, width = 75)
+        self.notes = tkinter.Text(self.root_window, width = 50, height = 28)
 
     def resource_path(self, relative_path):
         '''Get absolute path to resource, works for dev and for PyInstaller'''
@@ -148,17 +148,17 @@ class NoteTaker:
         tkinter.Label(self.root_window, text = "Notes").grid(row = 2, column = 0)
         self.notes.grid(row = 2, column = 1, columnspan = 2, sticky = tkinter.NSEW)
 
-        save_button = tkinter.Button(self.root_window, text = "Save", command = self.save_to_file)
-        save_button.grid(row = 3, column = 0, columnspan = 2)
+        save_button = tkinter.Button(self.root_window, text = "Save", command = self.save_to_file, width = 31)
+        save_button.grid(row = 3, column = 1, columnspan = 2, sticky = tkinter.W)
 
-        send_button = tkinter.Button(self.root_window, text = "Send", command = self.send_notes)
-        send_button.grid(row = 3, column = 1, columnspan = 2)
+        send_button = tkinter.Button(self.root_window, text = "Send", command = self.send_notes, width = 31)
+        send_button.grid(row = 3, column = 1, columnspan = 2, sticky = tkinter.E)
 
-        load_button = tkinter.Button(self.root_window, text = "Load", command = self.load_file)
-        load_button.grid(row = 4, column = 0, columnspan = 2)
+        load_button = tkinter.Button(self.root_window, text = "Load", command = self.load_file, width = 31)
+        load_button.grid(row = 4, column = 1, columnspan = 2, sticky = tkinter.W)
 
-        clear_button = tkinter.Button(self.root_window, text = "Clear", command = self.clear_text)
-        clear_button.grid(row = 4, column = 1, columnspan = 2)
+        clear_button = tkinter.Button(self.root_window, text = "Clear", command = self.clear_text, width = 31)
+        clear_button.grid(row = 4, column = 1, columnspan = 2, sticky = tkinter.E)
 
         self.root_window.mainloop()
         
