@@ -86,9 +86,10 @@ class NoteTaker:
         try:
             infile = open("{}.txt".format(title.strip()), "r")
             self.notes.insert(tkinter.END, infile.read())
+            infile.close()
         except FileNotFoundError:
             messagebox.showinfo("Error", message = "Notes not found")
-        except AttributeError:
+        except:
             pass
 
     def clear_text(self):
