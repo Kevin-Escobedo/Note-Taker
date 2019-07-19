@@ -15,7 +15,7 @@ class NoteTaker:
     def __init__(self):
         '''Sets up the GUI'''
         self.root_window = tkinter.Tk()
-        self.root_window.geometry("500x510")
+        self.root_window.geometry("500x550")
         self.root_window.title("Escobedo Industries Note Taker")
         self.root_window.resizable(0, 0)
         self.root_window.iconbitmap(self.resource_path("quill.ico"))
@@ -80,6 +80,21 @@ class NoteTaker:
         except AttributeError:
             pass
 
+    def load_file(self):
+        '''Loads previous notes'''
+        title = self.get_title()
+        try:
+            infile = open("{}.txt".format(title.strip()), "r")
+            self.notes.insert(tkinter.END, infile.read())
+        except FileNotFoundError:
+            messagebox.showinfo("Error", message = "Notes not found")
+        except AttributeError:
+            pass
+
+    def clear_text(self):
+        '''Clears the text box'''
+        self.notes.delete(1.0, tkinter.END)
+
     def send_notes(self):
         try:
             title = self.get_title().strip()
@@ -137,6 +152,12 @@ class NoteTaker:
 
         send_button = tkinter.Button(self.root_window, text = "Send", command = self.send_notes)
         send_button.grid(row = 3, column = 1, columnspan = 2)
+
+        load_button = tkinter.Button(self.root_window, text = "Load", command = self.load_file)
+        load_button.grid(row = 4, column = 0, columnspan = 2)
+
+        clear_button = tkinter.Button(self.root_window, text = "Clear", command = self.clear_text)
+        clear_button.grid(row = 4, column = 1, columnspan = 2)
 
         self.root_window.mainloop()
         
