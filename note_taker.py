@@ -71,7 +71,7 @@ class NoteTaker:
         '''Saves notes to a file'''
         title = self.get_title()
         try:
-            outfile = open("{}.txt".format(title.strip()), "w", encoding = "utf-8")
+            outfile = open("{}.txt".format(title.strip()), "w", encoding = "utf-16")
             notes = self.get_notes()
             outfile.write(notes)
             outfile.flush()
@@ -84,7 +84,7 @@ class NoteTaker:
         '''Loads previous notes'''
         title = self.get_title()
         try:
-            infile = open("{}.txt".format(title.strip()), "r", encoding = "utf-8")
+            infile = open("{}.txt".format(title.strip()), "r", encoding = "utf-16")
             self.notes.insert(tkinter.END, infile.read())
             infile.close()
         except FileNotFoundError:
