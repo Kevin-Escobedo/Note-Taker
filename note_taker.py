@@ -115,7 +115,7 @@ class NoteTaker:
             else:
                 subject = "{} Notes".format(title)
 
-            recipient = ""#self.get_email_recipient()
+            recipient = self.get_email_recipient()
 
             msg = MIMEMultipart()
             msg['From'] = self.email_user
