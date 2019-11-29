@@ -6,6 +6,7 @@ from email.mime.base import MIMEBase
 from email import encoders
 from socket import gethostbyname, gaierror
 from tkinter import messagebox
+from tkinter import filedialog
 import smtplib
 import tkinter
 import os
@@ -46,7 +47,7 @@ class NoteTaker:
         '''Gets the title of the notes'''
         try:
             title = self.note_title.get()
-            if self.no_invalid_characters(title) and self.check_not_empty(title):
+            if self.no_invalid_characters(title):# and self.check_not_empty(title):
                 return title
             else:
                 raise ValueError
@@ -71,7 +72,7 @@ class NoteTaker:
         '''Saves notes to a file'''
         title = self.get_title()
         try:
-            outfile = open("{}.txt".format(title.strip()), "w", encoding = "utf-16")
+            outfile = open("{}.txt".format(title.strip()), "w", encoding = "utf-8")
             notes = self.get_notes()
             outfile.write(notes)
             outfile.flush()
@@ -83,14 +84,24 @@ class NoteTaker:
     def load_file(self):
         '''Loads previous notes'''
         title = self.get_title()
-        try:
-            infile = open("{}.txt".format(title.strip()), "r", encoding = "utf-16")
-            self.notes.insert(tkinter.END, infile.read())
-            infile.close()
-        except FileNotFoundError:
-            messagebox.showinfo("Error", message = "Notes not found")
-        except:
-            pass
+        if len(title) != 0:
+            try:
+                infile = open("{}.txt".format(title.strip()), "r", encoding = "utf-8")
+                self.notes.insert(tkinter.END, infile.read())
+                infile.close()
+            except FileNotFoundError:
+                messagebox.showinfo("Error", message = "Notes not found")
+            except:
+                pass
+        else:
+                file_path = filedialog.askopenfilename()
+                title = file_path.split("/")[-1]
+                title = title.split(".")[0]
+                infile = open("{}".format(file_path), "r", encoding = "utf-8")
+                self.note_title.insert(tkinter.END, title)
+                self.notes.insert(tkinter.END, infile.read())
+                infile.close()
+
 
     def clear_text(self):
         '''Clears the text box'''
@@ -104,7 +115,7 @@ class NoteTaker:
             else:
                 subject = "{} Notes".format(title)
 
-            recipient = self.get_email_recipient()
+            recipient = ""#self.get_email_recipient()
 
             msg = MIMEMultipart()
             msg['From'] = self.email_user
@@ -134,8 +145,6 @@ class NoteTaker:
 
         except TypeError:
             pass
-
-        
 
     def run(self):
         '''Runs the GUI'''
