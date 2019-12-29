@@ -17,7 +17,7 @@ class NoteTaker:
         '''Sets up the GUI'''
         self.root_window = tkinter.Tk()
         self.root_window.geometry("550x560")
-        self.root_window.title("Escobedo Industries Note Taker")
+        self.root_window.title("Note Taker")
         self.root_window.resizable(0, 0)
         self.root_window.iconbitmap(self.resource_path("quill.ico"))
         self.email_user = "" #Add own email here
