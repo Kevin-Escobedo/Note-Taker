@@ -146,6 +146,12 @@ class NoteTaker:
         except TypeError:
             pass
 
+    def on_close(self):
+        '''Runs when the GUI is closed'''
+        if len(self.get_title().strip()):
+            self.save_to_file()
+        self.root_window.destroy()
+
     def run(self):
         '''Runs the GUI'''
         tkinter.Label(self.root_window, text = "Name of Notes").grid(row = 0, column = 0)
@@ -168,6 +174,8 @@ class NoteTaker:
 
         clear_button = tkinter.Button(self.root_window, text = "Clear", command = self.clear_text, width = 31)
         clear_button.grid(row = 4, column = 1, columnspan = 2, sticky = tkinter.E)
+
+        self.root_window.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.root_window.mainloop()
         
