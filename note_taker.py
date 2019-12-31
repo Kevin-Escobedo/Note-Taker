@@ -24,7 +24,7 @@ class NoteTaker:
         self.email_password = "" #Add own password here
         self.email_recipient = tkinter.Entry(self.root_window, width = 75)
         self.note_title = tkinter.Entry(self.root_window, width = 75)
-        self.notes = tkinter.Text(self.root_window, width = 50, height = 28)
+        self.notes = tkinter.Text(self.root_window, width = 50, height = 28, tabs = "0.25i")
 
     def resource_path(self, relative_path):
         '''Get absolute path to resource, works for dev and for PyInstaller'''
@@ -115,7 +115,7 @@ class NoteTaker:
             else:
                 subject = "{} Notes".format(title)
 
-            recipient = self.get_email_recipient()
+            recipient = ""#self.get_email_recipient()
 
             msg = MIMEMultipart()
             msg['From'] = self.email_user
@@ -146,11 +146,42 @@ class NoteTaker:
         except TypeError:
             pass
 
+    def silent_save_to_file(self):
+        '''Saves notes to a file'''
+        title = self.get_title()
+        try:
+            outfile = open("{}.txt".format(title.strip()), "w", encoding = "utf-8")
+            notes = self.get_notes()
+            outfile.write(notes)
+            outfile.flush()
+            outfile.close()
+            #messagebox.showinfo("Success", message = "Notes saved successfully!")
+        except AttributeError:
+            pass
+
     def on_close(self):
         '''Runs when the GUI is closed'''
         if len(self.get_title().strip()):
-            self.save_to_file()
+            self.silent_save_to_file()
         self.root_window.destroy()
+
+    def key(self, event):
+        '''Handles key input'''
+        if event.keysym == "s":
+            if len(self.get_title().strip()):
+                self.silent_save_to_file()
+                
+        elif event.keysym == "o":
+            try:
+                self.load_file()
+            except FileNotFoundError:
+                pass
+            
+        elif event.keysym == "m":
+            self.send_notes()
+
+        elif event.keysym == "e":
+            self.clear_text()
 
     def run(self):
         '''Runs the GUI'''
@@ -176,6 +207,10 @@ class NoteTaker:
         clear_button.grid(row = 4, column = 1, columnspan = 2, sticky = tkinter.E)
 
         self.root_window.protocol("WM_DELETE_WINDOW", self.on_close)
+        self.root_window.bind("<Control-s>", self.key)
+        self.root_window.bind("<Control-o>", self.key)
+        self.root_window.bind("<Control-m>", self.key)
+        self.root_window.bind("<Control-e>", self.key)
 
         self.root_window.mainloop()
         
