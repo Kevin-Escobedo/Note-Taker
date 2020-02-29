@@ -72,7 +72,7 @@ class NoteTaker:
         '''Saves notes to a file'''
         title = self.get_title()
         try:
-            outfile = open("{}.txt".format(title.strip()), "w", encoding = "utf-8")
+            outfile = open("{}.txt".format(title.strip()), "w", encoding = "utf-32")
             notes = self.get_notes()
             outfile.write(notes)
             outfile.flush()
@@ -81,25 +81,44 @@ class NoteTaker:
         except AttributeError:
             pass
 
+    def read_notes(self, title:str):
+        '''Reads a note file'''
+        try:
+            file = open("{}.txt".format(title), "r", encoding = "utf-8")
+            content = file.read()
+            file.close()
+            return content
+        except UnicodeDecodeError:
+            try:
+                file = open("{}.txt".format(title), "r", encoding = "utf-16")
+                content = file.read()
+                file.close()
+                return content
+            except UnicodeDecodeError:
+                file = open("{}.txt".format(title), "r", encoding = "utf-32")
+                content = file.read()
+                file.close()
+                return content
+        except FileNotFoundError:
+            messagebox.showinfo("Error", message = "Notes not found")
+
+
     def load_file(self):
         '''Loads previous notes'''
         title = self.get_title()
         if len(title) != 0:
             try:
-                infile = open("{}.txt".format(title.strip()), "r", encoding = "utf-8")
-                self.notes.insert(tkinter.END, infile.read())
-                infile.close()
-            except FileNotFoundError:
-                messagebox.showinfo("Error", message = "Notes not found")
+                content = self.read_notes(title.strip())
+                self.notes.insert(tkinter.END, content)
             except:
                 pass
         else:
                 file_path = filedialog.askopenfilename()
                 title = file_path.split("/")[-1]
                 title = title.split(".")[0]
-                infile = open("{}".format(file_path), "r", encoding = "utf-8")
+                content = self.read_notes(file_path)
                 self.note_title.insert(tkinter.END, title)
-                self.notes.insert(tkinter.END, infile.read())
+                self.notes.insert(tkinter.END, content)
                 infile.close()
 
 
