@@ -72,7 +72,7 @@ class NoteTaker:
         '''Saves notes to a file'''
         title = self.get_title()
         try:
-            outfile = open("{}.txt".format(title.strip()), "w", encoding = "utf-32")
+            outfile = open("{}.txt".format(title.strip()), "w", encoding = "utf-16")
             notes = self.get_notes()
             outfile.write(notes)
             outfile.flush()
@@ -169,7 +169,7 @@ class NoteTaker:
         '''Saves notes to a file'''
         title = self.get_title()
         try:
-            outfile = open("{}.txt".format(title.strip()), "w", encoding = "utf-8")
+            outfile = open("{}.txt".format(title.strip()), "w", encoding = "utf-16")
             notes = self.get_notes()
             outfile.write(notes)
             outfile.flush()
