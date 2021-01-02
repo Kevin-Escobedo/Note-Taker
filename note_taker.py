@@ -1,5 +1,3 @@
-#Author: Kevin C. Escobedo
-#Email: escobedo001@gmail.com
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
@@ -19,12 +17,21 @@ class NoteTaker:
         self.root_window.geometry("550x560")
         self.root_window.title("Note Taker")
         self.root_window.resizable(0, 0)
-        self.root_window.iconbitmap(self.resource_path("quill.ico"))
+        if sys.platform == "linux":
+            self.root_window.iconbitmap("@quill.xbm")
+            self.notesHeight = 26
+            self.boxWidth = 54
+            self.buttonWidth = 23
+        elif sys.platform == "win32":
+            self.root_window.iconbitmap(self.resource_path("quill.ico"))
+            self.notesHeight = 28
+            self.boxWidth = 75
+            self.buttonWidth = 31
         self.email_user = "" #Add own email here
         self.email_password = "" #Add own password here
-        self.email_recipient = tkinter.Entry(self.root_window, width = 75)
-        self.note_title = tkinter.Entry(self.root_window, width = 75)
-        self.notes = tkinter.Text(self.root_window, width = 50, height = 28, tabs = "0.25i")
+        self.email_recipient = tkinter.Entry(self.root_window, width = self.boxWidth)
+        self.note_title = tkinter.Entry(self.root_window, width = self.boxWidth)
+        self.notes = tkinter.Text(self.root_window, width = 50, height = self.notesHeight, tabs = "0.25i")
 
     def resource_path(self, relative_path):
         '''Get absolute path to resource, works for dev and for PyInstaller'''
@@ -213,16 +220,16 @@ class NoteTaker:
         tkinter.Label(self.root_window, text = "Notes").grid(row = 2, column = 0)
         self.notes.grid(row = 2, column = 1, columnspan = 2, sticky = tkinter.NSEW)
 
-        save_button = tkinter.Button(self.root_window, text = "Save", command = self.save_to_file, width = 31)
+        save_button = tkinter.Button(self.root_window, text = "Save", command = self.save_to_file, width = self.buttonWidth)
         save_button.grid(row = 3, column = 1, columnspan = 2, sticky = tkinter.W)
 
-        send_button = tkinter.Button(self.root_window, text = "Send", command = self.send_notes, width = 31)
+        send_button = tkinter.Button(self.root_window, text = "Send", command = self.send_notes, width = self.buttonWidth)
         send_button.grid(row = 3, column = 1, columnspan = 2, sticky = tkinter.E)
 
-        load_button = tkinter.Button(self.root_window, text = "Load", command = self.load_file, width = 31)
+        load_button = tkinter.Button(self.root_window, text = "Load", command = self.load_file, width = self.buttonWidth)
         load_button.grid(row = 4, column = 1, columnspan = 2, sticky = tkinter.W)
 
-        clear_button = tkinter.Button(self.root_window, text = "Clear", command = self.clear_text, width = 31)
+        clear_button = tkinter.Button(self.root_window, text = "Clear", command = self.clear_text, width = self.buttonWidth)
         clear_button.grid(row = 4, column = 1, columnspan = 2, sticky = tkinter.E)
 
         self.root_window.protocol("WM_DELETE_WINDOW", self.on_close)
